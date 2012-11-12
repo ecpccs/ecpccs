@@ -11,6 +11,11 @@
 #include <sys/types.h>
 #include <ctime>
 
+struct clientHandler {
+    int clientSocket;
+    CertificateAuthority* ca;
+};
+
 static void* CertificateAuthority::serverThread(void* arg) {
     CertificateAuthority* ca = reinterpret_cast<CertificateAuthority*>(arg);
 
@@ -33,4 +38,21 @@ static void* CertificateAuthority::serverThread(void* arg) {
 }
 
 static void* CertificateAuthority::clientThread(void *arg) {
+    int clientSocket = reinterpret_cast<clientHandler*>(arg)->clientSocket;
+    int ca = reinterpret_cast<clientHandler*>(arg)->ca;
+    
+    char request[86];
+    recv(clientSocket, request, 86, 0);
+    if(strncmp(request, "AUTH", 4)) {
+       
+    }
+    else if(strncmp(request, "RETR", 4)) {
+        char name[64];
+        strncpy(name, request + 4, 64);
+        
+        map<string, Certificate>::const_iterator it = ca->_register.find(name);
+        if(it == ca->_register.end()) return; /* TO DO STH */
+        send(
+        
+    }
 }
