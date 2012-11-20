@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     LocalUser user(argv[1]);
     
     try {
-        user.registerf();
+        user.auth();
     }
     catch(const std::exception& e) {
         cerr << e.what() << endl;
@@ -29,11 +29,18 @@ int main(int argc, char** argv)
     listener.listen();
 
     Messenger messenger;
-    std::string message;
+    std::string command;
     while(true) {
-        cin >> message;
-        cout << message;
-        message = "";
+        getline(cin, command);
+        size_t first_space = command.find_first_of(' ');
+        std::string target = command.substr(0, first_space);
+        std::string message = command.substr(first_space+1);
+        
+        cout << "Commande : " << command << endl;
+        cout << "message : " << message << endl;
+        cout << "target : " << target << endl;
+
+        command = "";
     }
 }
 

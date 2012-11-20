@@ -8,7 +8,7 @@ class LocalUser
     public:
         LocalUser(std::string login);
         
-        void registerf();
+        void auth();
 
     private:
         std::string _login;

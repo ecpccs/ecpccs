@@ -5,9 +5,9 @@
 
 
 struct Certificate {
-    unsigned char name[64];
+    unsigned char name[16];
     unsigned char ip[4];
-    unsigned char pKey[1024];
+    unsigned char pKey[128];
 };
 
 #endif //!CERTIFICATE_H
