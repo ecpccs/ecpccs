@@ -1,7 +1,7 @@
 #ifndef CERTIFICATE_AUTHORITY_H
 #define CERTIFICATE_AUTHORITY_H
 
-#include <pthread>
+#include <pthread.h>
 #include <map>
 #include "../common/Certificate.h"
 

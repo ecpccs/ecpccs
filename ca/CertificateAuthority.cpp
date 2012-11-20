@@ -5,18 +5,21 @@
 #include <arpa/inet.h>
 #include <cstdio>
 #include <cstdlib>
-#include <cunistd>
 #include <cerrno>
 #include <cstring>
 #include <sys/types.h>
 #include <ctime>
+#include <iostream>
 
-struct clientHandler {
+using namespace std;
+
+struct ClientHandler {
+    ClientHandler(int socket, CertificateAuthority* ca_) : clientSocket(socket), ca(ca_) {}
     int clientSocket;
     CertificateAuthority* ca;
 };
 
-static void* CertificateAuthority::serverThread(void* arg) {
+void* CertificateAuthority::serverThread(void* arg) {
     CertificateAuthority* ca = reinterpret_cast<CertificateAuthority*>(arg);
 
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -31,16 +34,20 @@ static void* CertificateAuthority::serverThread(void* arg) {
 
     while(true) {
         int clientSocket = accept(serverSocket, NULL, NULL);
-        
+        ClientHandler* handler = new ClientHandler(clientSocket, ca);
+        pthread_t thread;
+        pthread_create(&thread, NULL, CertificateAuthority::clientThread, static_cast<void*>(handler));
 
     }
 
+    pthread_exit(NULL);
+
 }
 
-static void* CertificateAuthority::clientThread(void *arg) {
-    int clientSocket = reinterpret_cast<clientHandler*>(arg)->clientSocket;
-    int ca = reinterpret_cast<clientHandler*>(arg)->ca;
-    
+void* CertificateAuthority::clientThread(void *arg) {
+    ClientHandler* handler = static_cast<ClientHandler*>(arg);
+    int clientSocket = handler->clientSocket;
+    CertificateAuthority* ca = handler->ca;
     char request[86];
     recv(clientSocket, request, 86, 0);
     if(strncmp(request, "AUTH", 4)) {
@@ -51,8 +58,10 @@ static void* CertificateAuthority::clientThread(void *arg) {
         strncpy(name, request + 4, 64);
         
         map<string, Certificate>::const_iterator it = ca->_register.find(name);
-        if(it == ca->_register.end()) return; /* TO DO STH */
-        send(
+        if(it == ca->_register.end()) return NULL; /* TO DO STH */
+//        send(
         
     }
+
+    return NULL;
 }
