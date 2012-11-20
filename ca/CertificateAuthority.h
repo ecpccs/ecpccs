@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <map>
 #include "../common/Certificate.h"
+#include <openssl/rsa.h>
 
 class CertificateAuthority 
 {

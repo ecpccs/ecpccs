@@ -34,6 +34,7 @@ void* CertificateAuthority::serverThread(void* arg) {
 
     while(true) {
         int clientSocket = accept(serverSocket, NULL, NULL);
+        cout << "New client connected with socket " << clientSocket << endl;
         ClientHandler* handler = new ClientHandler(clientSocket, ca);
         pthread_t thread;
         pthread_create(&thread, NULL, CertificateAuthority::clientThread, static_cast<void*>(handler));
@@ -48,16 +49,28 @@ void* CertificateAuthority::clientThread(void *arg) {
     ClientHandler* handler = static_cast<ClientHandler*>(arg);
     int clientSocket = handler->clientSocket;
     CertificateAuthority* ca = handler->ca;
-    char request[86];
-    recv(clientSocket, request, 86, 0);
-    if(strncmp(request, "AUTH", 4)) {
-       
+
+    cout << "clientThread started for socket " << clientSocket << endl;
+
+    char buffer[38];
+    recv(clientSocket, buffer, 38, 0);
+    string request = buffer;
+    if(request.size() < 38) {
+        cout << "Too short request received (" << request.size() << ")!" << endl;
+        close(clientSocket);
+        pthread_exit(NULL);
     }
-    else if(strncmp(request, "RETR", 4)) {
-        char name[64];
-        strncpy(name, request + 4, 64);
+    string req = request.substr(0, 4);
+    string login = request.substr(5, 16);
+    cout << "Received request [" << req << "] from \"" << login << "\"" << endl;
+    if(req == "AUTH") {
+        string key = request.substr(22, 16);
+        cout << "Received blowfish key : " << key << endl;
+
+    }
+    else if(req == "RETR") {
         
-        map<string, Certificate>::const_iterator it = ca->_register.find(name);
+        map<string, Certificate>::const_iterator it = ca->_register.find(login);
         if(it == ca->_register.end()) return NULL; /* TO DO STH */
 //        send(
         
