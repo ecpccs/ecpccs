@@ -16,6 +16,7 @@ class Key
 
             for(unsigned int i = 0 ; i < keySize ; ++i) {
                 _key[i] = static_cast<double>(rand()) * 256. / (static_cast<double>(RAND_MAX)+1.); 
+                //_key[i] = i+65;
             }
         }
 
