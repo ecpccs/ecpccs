@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-  FILE* file = fopen("cert.pem", "r");
+  FILE* file = fopen("ca_key.pem", "r");
   if(file == NULL) {
       cerr << "Cannot open cert.pem" << endl;
       return 1;
