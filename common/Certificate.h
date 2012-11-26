@@ -19,7 +19,7 @@ struct Certificate {
         memset(this->name, 16, 0);
         strncpy(this->name, name.c_str(), name.size());
         strncpy(this->ip, (const char*)addr, 4);
-        char* key = BN_bn2hex(rsa->e);
+        char* key = BN_bn2hex(rsa->n);
         memset(this->pKey, 128, 0);
         strncpy(this->pKey, key, strlen(key));
         OPENSSL_free(key);
