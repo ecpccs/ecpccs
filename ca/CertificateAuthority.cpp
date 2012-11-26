@@ -11,6 +11,10 @@
 #include <ctime>
 #include <iostream>
 
+#include <openssl/rsa.h>
+#include <openssl/blowfish.h>
+#include <openssl/pem.h>
+
 using namespace std;
 
 struct ClientHandler {
@@ -18,6 +22,18 @@ struct ClientHandler {
     int clientSocket;
     CertificateAuthority* ca;
 };
+
+
+CertificateAuthority::CertificateAuthority(RSA* cert)
+ : _certificate(cert) {
+    if(_certificate == NULL) {
+        cerr << "Invalid certificate !" << endl;
+    }
+    else {
+        int size = RSA_size(_certificate);
+        cerr << "Loaded valid RSA with key length of " << size << endl;
+    }
+}
 
 void* CertificateAuthority::serverThread(void* arg) {
     CertificateAuthority* ca = reinterpret_cast<CertificateAuthority*>(arg);
@@ -54,18 +70,32 @@ void* CertificateAuthority::clientThread(void *arg) {
 
     char buffer[38];
     recv(clientSocket, buffer, 38, 0);
-    string request = buffer;
-    if(request.size() < 38) {
-        cout << "Too short request received (" << request.size() << ")!" << endl;
+    char decryptedBuffer[38];
+    int res = RSA_private_decrypt(38, (unsigned char*)buffer, (unsigned char*)decryptedBuffer, ca->_certificate, RSA_PKCS1_OAEP_PADDING);
+    if(res < 38) {
+        cout << "Too short request received (" << res << ")!" << endl;
         close(clientSocket);
         pthread_exit(NULL);
     }
+    string request = decryptedBuffer;
     string req = request.substr(0, 4);
     string login = request.substr(5, 16);
     cout << "Received request [" << req << "] from \"" << login << "\"" << endl;
     if(req == "AUTH") {
         string key = request.substr(22, 16);
         cout << "Received blowfish key : " << key << endl;
+        RSA* rsa = RSA_generate_key(1024, 65537, NULL, NULL);
+        char* d = BN_bn2hex(rsa->d);
+
+        BF_KEY* blowfish = new BF_KEY;
+        BF_set_key(blowfish, 16, (unsigned char*)key.c_str());
+        char cryptedKey[128];
+        unsigned char ivec[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        int num = 0;
+        BF_cfb64_encrypt((unsigned char*)d, (unsigned char*)cryptedKey, 128, blowfish, ivec, &num, BF_ENCRYPT);
+
+        send(clientSocket, cryptedKey, 128, 0);
+
 
     }
     else if(req == "RETR") {
