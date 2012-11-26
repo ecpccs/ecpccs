@@ -17,6 +17,8 @@ int main(int argc, char** argv)
 
     Messenger messenger(argv[1], argv[2]);
 
+    messenger.retrieveRemoteUser(argv[1]);
+    
     std::string command;
     while(true) {
         getline(cin, command);
@@ -27,6 +29,8 @@ int main(int argc, char** argv)
         cout << "Commande : " << command << endl;
         cout << "message : " << message << endl;
         cout << "target : " << target << endl;
+        
+        
 
         command = "";
     }

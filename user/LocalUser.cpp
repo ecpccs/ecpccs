@@ -28,6 +28,11 @@ LocalUser::LocalUser(std::string login)
     _privKey = RSA_new();
 }
 
+
+RSA* LocalUser::getPrivateKey() {
+    return _privKey;
+}
+
 void LocalUser::auth(std::string ip)
 {
     //generate temp blowfish key
@@ -92,13 +97,13 @@ void LocalUser::auth(std::string ip)
     BF_cfb64_encrypt(buffer, privKey, 128, blowKey, ivec, &num, BF_DECRYPT);
 
     BN_hex2bn(&_privKey->d, reinterpret_cast<char*>(privKey));
-    BN_hex2bn(&_privKey->n, "65537");
+    BN_dec2bn(&_privKey->n, "65537");
 
 //  cout << BN_bn2hex(_privKey->d) << endl;
 
     delete privKey;
     delete buffer;
     delete key;
-    delete encryptetCommand;
+    delete encryptedCommand;
     _registered = true;
 }

@@ -12,6 +12,8 @@ class LocalUser
         
         void auth(std::string ip);
 
+        RSA* getPrivateKey();
+
     private:
         std::string _login;
         bool _registered;

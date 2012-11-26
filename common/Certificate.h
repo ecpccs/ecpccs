@@ -40,8 +40,20 @@ struct Certificate {
         rsa->dmp1 = NULL;
         rsa->dmq1 = NULL;
         rsa->iqmp = NULL;
-        BN_hex2bn(&rsa->e, this->pKey);
-        BN_dec2bn(&rsa->n, "65537");
+        char key[129];
+        strncpy(key, pKey, 128);
+        key[128] = 0;
+        std::cout << key << std::endl;
+        int res = BN_hex2bn(&rsa->e, key);
+        std::cout << res << std::endl;
+        if(res == 0) {
+            std::cerr << "BN conversion error" << std::endl;
+        }
+        res = BN_dec2bn(&rsa->n, "65537");
+        std::cout << res << std::endl;
+        if(res == 0) {
+            std::cerr << "BN conversion error" << std::endl;
+        }
     }
 };
 

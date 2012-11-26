@@ -18,7 +18,7 @@ class Messenger
         void sendTo(std::string login, std::string message) const;
 
     private:
-        std::map<std::string, Certificate> _remoteUsers;
+        std::map<std::string, Certificate*> _remoteUsers;
         std::string _authIp;
         LocalUser _user;
 };
