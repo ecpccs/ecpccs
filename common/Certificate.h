@@ -19,7 +19,7 @@ struct Certificate {
         memset(this->name, 16, 0);
         strncpy(this->name, name.c_str(), name.size());
         strncpy(this->ip, (const char*)addr, 4);
-        char* key = BN_bn2hex(rsa->d);
+        char* key = BN_bn2hex(rsa->e);
         memset(this->pKey, 128, 0);
         strncpy(this->pKey, key, strlen(key));
         OPENSSL_free(key);
@@ -32,7 +32,15 @@ struct Certificate {
 
     RSA* getPublicKey() {
         RSA* rsa = RSA_new();
-        BN_hex2bn(&rsa->d, this->pKey);
+        prsa->n = NULL;
+        prsa->e = NULL;
+        prsa->d = NULL;
+        prsa->p = NULL;
+        prsa->q = NULL;
+        prsa->dmp1 = NULL;
+        prsa->dmq1 = NULL;
+        prsa->iqmp = NULL;
+        BN_hex2bn(&rsa->e, this->pKey);
         BN_dec2bn(&rsa->n, "65537");
     }
 };
