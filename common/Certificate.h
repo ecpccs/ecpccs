@@ -32,14 +32,14 @@ struct Certificate {
 
     RSA* getPublicKey() {
         RSA* rsa = RSA_new();
-        prsa->n = NULL;
-        prsa->e = NULL;
-        prsa->d = NULL;
-        prsa->p = NULL;
-        prsa->q = NULL;
-        prsa->dmp1 = NULL;
-        prsa->dmq1 = NULL;
-        prsa->iqmp = NULL;
+        rsa->n = NULL;
+        rsa->e = NULL;
+        rsa->d = NULL;
+        rsa->p = NULL;
+        rsa->q = NULL;
+        rsa->dmp1 = NULL;
+        rsa->dmq1 = NULL;
+        rsa->iqmp = NULL;
         BN_hex2bn(&rsa->e, this->pKey);
         BN_dec2bn(&rsa->n, "65537");
     }
