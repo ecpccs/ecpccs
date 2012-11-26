@@ -10,25 +10,13 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    if(argc != 2) {
+    if(argc != 3) {
         usage(argv[0]);
         return 0;
     }
 
-    LocalUser user(argv[1]);
-    
-    try {
-        user.auth();
-    }
-    catch(const std::exception& e) {
-        cerr << e.what() << endl;
-        throw e;
-    }
+    Messenger messenger(argv[1], argv[2]);
 
-    MessageListener listener;
-    listener.listen();
-
-    Messenger messenger;
     std::string command;
     while(true) {
         getline(cin, command);
@@ -46,5 +34,5 @@ int main(int argc, char** argv)
 
 void usage(char* exName)
 {
-    cout << "Usage: " << exName << " <login>" << endl;
+    cout << "Usage: " << exName << " <login> <ca ip>" << endl;
 }
