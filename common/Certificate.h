@@ -3,11 +3,38 @@
 
 #include <string>
 
+#include <netinet/in.h>
+#include <openssl/rsa.h>
+#include <openssl/bn.h>
+
+#include <cstdio>
+#include <cstring>
 
 struct Certificate {
-    unsigned char name[16];
-    unsigned char ip[4];
-    unsigned char pKey[128];
+    char name[16];
+    char ip[4];
+    char pKey[128];
+
+    Certificate(std::string name, in_addr* addr, RSA* rsa) {
+        memset(this->name, 16, 0);
+        strncpy(this->name, name.c_str(), name.size());
+        strncpy(this->ip, (const char*)addr, 4);
+        char* key = BN_bn2hex(rsa->d);
+        memset(this->pKey, 128, 0);
+        strncpy(this->pKey, key, strlen(key));
+        OPENSSL_free(key);
+    }
+
+    in_addr getIp() {
+        in_addr addr;
+        strncpy(this->ip, (const char*)&addr, 4);
+    }
+
+    RSA* getPublicKey() {
+        RSA* rsa = RSA_new();
+        BN_hex2bn(&rsa->d, this->pKey);
+        BN_dec2bn(&rsa->n, "65537");
+    }
 };
 
 #endif //!CERTIFICATE_H
