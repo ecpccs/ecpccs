@@ -1,6 +1,8 @@
 #ifndef KEY_H
 #define KEY_H
 
+#include <fstream>
+
 class Key
 {
     public:
@@ -8,7 +10,7 @@ class Key
         {
             _key = new unsigned char[keySize];
             
-            ifstream rf("/dev/urandom");
+            std::ifstream rf("/dev/urandom");
             unsigned int seed = 0;
             rf >> seed;
 
@@ -19,11 +21,11 @@ class Key
 
         unsigned char* getKey()
         {
-            return key;
+            return _key;
         }
 
     private:
         unsigned char* _key;
-}
+};
 
 #endif
