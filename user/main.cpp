@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include "LocalUser.h"
-#include "MessageListener.h"
 #include "Messenger.h"
 
 void usage(char* exName);
@@ -18,9 +16,8 @@ int main(int argc, char** argv)
     srand(time(0));
     
     Messenger messenger(argv[1], argv[2]);
+    messenger.listen();
 
-    messenger.retrieveRemoteUser(argv[1]);
-    
     std::string command;
     while(true) {
         getline(cin, command);

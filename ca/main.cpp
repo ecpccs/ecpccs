@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
 
   CertificateAuthority * ca = new CertificateAuthority(key);
   pthread_t thread;
-  pthread_create(&thread, NULL, CertificateAuthority::serverThread, static_cast<void*>(ca));
+  pthread_create(&thread, NULL, CertificateAuthority::serverThread, ca);
 
   for(;;);
   return 0;

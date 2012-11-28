@@ -111,6 +111,30 @@ user/fast:
 	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/build
 .PHONY : user/fast
 
+ClientHandler.o: ClientHandler.cpp.o
+.PHONY : ClientHandler.o
+
+# target to build an object file
+ClientHandler.cpp.o:
+	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/ClientHandler.cpp.o
+.PHONY : ClientHandler.cpp.o
+
+ClientHandler.i: ClientHandler.cpp.i
+.PHONY : ClientHandler.i
+
+# target to preprocess a source file
+ClientHandler.cpp.i:
+	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/ClientHandler.cpp.i
+.PHONY : ClientHandler.cpp.i
+
+ClientHandler.s: ClientHandler.cpp.s
+.PHONY : ClientHandler.s
+
+# target to generate assembly for a file
+ClientHandler.cpp.s:
+	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/ClientHandler.cpp.s
+.PHONY : ClientHandler.cpp.s
+
 ClientListener.o: ClientListener.cpp.o
 .PHONY : ClientListener.o
 
@@ -159,30 +183,6 @@ LocalUser.cpp.s:
 	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/LocalUser.cpp.s
 .PHONY : LocalUser.cpp.s
 
-MessageListener.o: MessageListener.cpp.o
-.PHONY : MessageListener.o
-
-# target to build an object file
-MessageListener.cpp.o:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/MessageListener.cpp.o
-.PHONY : MessageListener.cpp.o
-
-MessageListener.i: MessageListener.cpp.i
-.PHONY : MessageListener.i
-
-# target to preprocess a source file
-MessageListener.cpp.i:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/MessageListener.cpp.i
-.PHONY : MessageListener.cpp.i
-
-MessageListener.s: MessageListener.cpp.s
-.PHONY : MessageListener.s
-
-# target to generate assembly for a file
-MessageListener.cpp.s:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/MessageListener.cpp.s
-.PHONY : MessageListener.cpp.s
-
 Messenger.o: Messenger.cpp.o
 .PHONY : Messenger.o
 
@@ -206,30 +206,6 @@ Messenger.s: Messenger.cpp.s
 Messenger.cpp.s:
 	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/Messenger.cpp.s
 .PHONY : Messenger.cpp.s
-
-RemoteUser.o: RemoteUser.cpp.o
-.PHONY : RemoteUser.o
-
-# target to build an object file
-RemoteUser.cpp.o:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/RemoteUser.cpp.o
-.PHONY : RemoteUser.cpp.o
-
-RemoteUser.i: RemoteUser.cpp.i
-.PHONY : RemoteUser.i
-
-# target to preprocess a source file
-RemoteUser.cpp.i:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/RemoteUser.cpp.i
-.PHONY : RemoteUser.cpp.i
-
-RemoteUser.s: RemoteUser.cpp.s
-.PHONY : RemoteUser.s
-
-# target to generate assembly for a file
-RemoteUser.cpp.s:
-	$(MAKE) -f CMakeFiles/user.dir/build.make CMakeFiles/user.dir/RemoteUser.cpp.s
-.PHONY : RemoteUser.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -264,21 +240,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... user"
+	@echo "... ClientHandler.o"
+	@echo "... ClientHandler.i"
+	@echo "... ClientHandler.s"
 	@echo "... ClientListener.o"
 	@echo "... ClientListener.i"
 	@echo "... ClientListener.s"
 	@echo "... LocalUser.o"
 	@echo "... LocalUser.i"
 	@echo "... LocalUser.s"
-	@echo "... MessageListener.o"
-	@echo "... MessageListener.i"
-	@echo "... MessageListener.s"
 	@echo "... Messenger.o"
 	@echo "... Messenger.i"
 	@echo "... Messenger.s"
-	@echo "... RemoteUser.o"
-	@echo "... RemoteUser.i"
-	@echo "... RemoteUser.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -18,6 +18,8 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 
+#include "ClientListener.h"
+
 using namespace std;
 
 Messenger::Messenger(std::string login, std::string ip)
@@ -30,6 +32,12 @@ Messenger::Messenger(std::string login, std::string ip)
         cerr << e.what() << endl;
         throw e;
     }
+}
+
+void Messenger::listen(unsigned int port)
+{
+    ClientListener listener(port);
+    listener.start();
 }
 
 void Messenger::retrieveRemoteUser(std::string login)
