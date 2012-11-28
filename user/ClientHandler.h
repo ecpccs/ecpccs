@@ -1,8 +1,9 @@
 #ifndef MESSAGELISTENER_H
 #define MESSAGELISTENER_H
 
-#include "ClientListener.h"
 #include <pthread.h>
+#include <arpa/inet.h>
+class ClientListener;
 
 class ClientHandler
 {

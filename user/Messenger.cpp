@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include <openssl/rsa.h>
 #include <openssl/sha.h>
@@ -19,6 +20,7 @@
 #include <openssl/err.h>
 
 #include "ClientListener.h"
+#include "Message.h"
 
 using namespace std;
 
@@ -40,7 +42,7 @@ Messenger::Messenger(std::string login, std::string ip)
 
 void Messenger::listen(unsigned int port)
 {
-    ClientListener listener(port);
+    ClientListener listener(this, port);
     listener.start();
 }
 
@@ -111,7 +113,8 @@ void Messenger::retrieveRemoteUser(std::string login)
     }
 
 
-    _remoteUsers.insert(std::make_pair(login, cert));
+    _remoteUsers.insert(std::make_pair(login, *cert));
+    delete cert;
 
     //RSA* pubKey = cert->getPublicKey();
 
@@ -125,4 +128,46 @@ void Messenger::retrieveRemoteUser(std::string login)
     //cout << size << " " << ERR_error_string(ERR_get_error(), NULL) << endl;
 
     //cout << b2 << endl;
+}
+
+void Messenger::sendTo(std::string login, std::string message) {
+    Certificate cert = this->findUser(login);
+    Message msg(this->_user.getLogin(), this->_user.getPrivateKey(), login.c_str(), cert.getPublicKey(), message.c_str());
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    sockaddr_in addr = {0};
+    addr.sin_family = AF_INET;
+    addr.sin_addr = cert.getIp();
+    addr.sin_port = htons(65534);
+    char* aip = inet_ntoa(cert.getIp());
+    string ip = aip ? aip : "Invalid";
+
+    if(connect(sock, (sockaddr*)&addr, sizeof(sockaddr)) < 0) {
+        cerr << "Failed to connect to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
+        throw std::exception();
+    }
+
+    string data = msg.toXml();
+    int size = data.size();
+
+    if(send(sock, &size, 4, 0) < 0) {
+        cerr << "Failed to send data to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
+        throw std::exception();
+    }
+    if(send(sock, data.c_str(), data.size(), 0) < 0) {
+        cerr << "Failed to send data to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
+        throw std::exception();
+    }
+}
+
+Certificate Messenger::findUser(std::string u) {
+    map<string, Certificate>::const_iterator it = _remoteUsers.find(u);
+    if(it == _remoteUsers.end()) {
+        this->retrieveRemoteUser(u);
+        map<string, Certificate>::const_iterator it = _remoteUsers.find(u);
+        if(it == _remoteUsers.end()) {
+            throw exception();
+        }
+    }
+    return it->second;
 }

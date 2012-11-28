@@ -11,11 +11,14 @@
 #include <sys/types.h>
 #include <ctime>
 #include <iostream>
+#include "ClientHandler.h"
+
+class Messenger;
 
 class ClientListener
 {
     public:
-        ClientListener(unsigned int port = 65534) : _port(port) {};
+        ClientListener(Messenger* messenger, unsigned int port = 65534) : _port(port), _messenger(messenger) {}
         void start();
 
     private:
@@ -23,6 +26,9 @@ class ClientListener
         
     private:
         unsigned int _port;
+        Messenger* _messenger;
+
+    friend class ClientHandler;
 };
 
 #endif

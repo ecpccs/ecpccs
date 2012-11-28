@@ -13,6 +13,7 @@ class LocalUser
         void auth(std::string ip);
 
         RSA* getPrivateKey();
+        inline std::string getLogin() { return _login; }
 
     private:
         std::string _login;

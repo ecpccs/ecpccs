@@ -16,10 +16,13 @@ class Messenger
         void listen(unsigned int port = 65535);
 
         void retrieveRemoteUser(std::string login);
-        void sendTo(std::string login, std::string message) const;
+        void sendTo(std::string login, std::string message);
+
+        inline LocalUser getLocalUser() const { return _user; }
+        Certificate findUser(std::string u);
 
     private:
-        std::map<std::string, Certificate*> _remoteUsers;
+        std::map<std::string, Certificate> _remoteUsers;
         std::string _authIp;
         LocalUser _user;
 };

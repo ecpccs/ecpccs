@@ -4,6 +4,7 @@
 #include <pthread.h>
 
 #include "Message.h"
+#include "ClientListener.h"
 
 using namespace std;
 
@@ -38,7 +39,8 @@ void* ClientHandler::thread(void* arg)
         pthread_exit(NULL);
     }
 
-    Message* mess = Message::retrieveMessage(buffer);
+
+    Message* mess = Message::retrieveMessage(buffer, handler->listener->_messenger);
     cout << mess->getContent() << endl;
     
     delete[] buffer;

@@ -5,6 +5,8 @@
 
 #include <string>
 
+class Messenger;
+
 class Message
 {
 	private:
@@ -17,7 +19,7 @@ class Message
 	public:
 		Message(const std::string& sender, RSA* senderPrivateKey, const std::string& receiver, RSA* receiverPublicKey, const std::string& content);
 
-		static Message* retrieveMessage(const std::string& xmlMessage, RSA* senderPublicKey, RSA* receiverPrivateKey);
+        static Message* retrieveMessage(const std::string& xmlMessage, Messenger* messenger);
 		std::string toXml() const;
 
 		std::string getContent() const {return _content;}
