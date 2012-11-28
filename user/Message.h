@@ -8,22 +8,21 @@
 class Message
 {
 	private:
-		char* _sender;
-		char* _receiver;
-		char* _content;
+		std::string _sender;
+		std::string _receiver;
+		std::string _content;
 		RSA* _senderPrivKey;
 		RSA* _receiverPubKey;
 
 	public:
-		Message(const char* sender, const RSA* senderPrivateKey, const char* receiver, const RSA* receiverPublicKey, const char* content);
-		~Message();
+		Message(const std::string& sender, const RSA* senderPrivateKey, const std::string& receiver, const RSA* receiverPublicKey, const std::string& content);
 
-		static Message* retrieveMessage(const char* xmlMessage);
-		const char* toXml() const;
+		static Message* retrieveMessage(const std::string& xmlMessage);
+		std::string toXml() const;
 
-		const char* getContent() const {return _content;}
-		const char* getSender() const {return _sender;}
-		const char* getReceiver() const {return _receiver;}
+		std::string getContent() const {return _content;}
+		std::string getSender() const {return _sender;}
+		std::string getReceiver() const {return _receiver;}
 };
 
 #endif //!MESSAGE_H
