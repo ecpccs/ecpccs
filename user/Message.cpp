@@ -30,7 +30,7 @@ Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* mess
 	xmlXPathContext *xpathCtx;
     xmlXPathObject *xpathObj;
 
-  	doc = xmlNewDoc((const xmlChar*) xmlMessage.c_str());
+  	doc = xmlParseDoc((const xmlChar*) xmlMessage.c_str());
   	xpathCtx = xmlXPathNewContext (doc);
 
   	xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/From", xpathCtx);
