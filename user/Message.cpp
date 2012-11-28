@@ -22,7 +22,7 @@ Message::Message(const std::string& sender, RSA* senderPrivateKey, const std::st
 	_senderPrivKey = senderPrivateKey;
 	_receiver = receiver;
 	_receiverPubKey = receiverPublicKey;
-	_content = _content;
+	_content = content;
 }
 
 Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* messenger) {
