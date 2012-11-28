@@ -85,23 +85,33 @@ void LocalUser::auth(std::string ip)
     //retrieve own certificate, verify that it's from ac
     
     unsigned char* buffer = new unsigned char[512];
-    if(recv(acSock, buffer, 128, 0) < 0) {
+    if(recv(acSock, buffer, 512, 0) < 0) {
         throw std::exception();
     }
     
-    unsigned char* privKey = new unsigned char[128];
+    unsigned char* privKey = new unsigned char[512];
+    unsigned char* d = new unsigned char[257];
+    unsigned char* n = new unsigned char[257];
+    memset(d, 257, 0);
+    memset(n, 257, 0);
+
     BF_KEY *blowKey = new BF_KEY;
     BF_set_key(blowKey, 16, key);
     unsigned char ivec[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     int num = 0;
-    BF_cfb64_encrypt(buffer, privKey, 128, blowKey, ivec, &num, BF_DECRYPT);
+    BF_cfb64_encrypt(buffer, privKey, 512, blowKey, ivec, &num, BF_DECRYPT);
+    
+    strncpy(d, privKey, 256);
+    strncpy(n, privKey+256, 256);
 
-    BN_hex2bn(&_privKey->d, reinterpret_cast<char*>(privKey));
-    BN_dec2bn(&_privKey->n, "65537");
+    BN_hex2bn(&_privKey->d, reinterpret_cast<char*>(d));
+    BN_hex2bn(&_privKey->n, reinterpret_cast<char*>(n));
 
 //  cout << BN_bn2hex(_privKey->d) << endl;
 
     delete privKey;
+    delete d;
+    delete n;
     delete buffer;
     delete key;
     delete encryptedCommand;
