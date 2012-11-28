@@ -72,7 +72,7 @@ void* CertificateAuthority::serverThread(void* arg) {
 }
 
 void* CertificateAuthority::clientThread(void *arg) {
-    ClientHandler* handler = static_cast<ClientHandler*>(arg);
+    ClientHandler* handler = reinterpret_cast<ClientHandler*>(arg);
     int clientSocket = handler->clientSocket;
     CertificateAuthority* ca = handler->ca;
 

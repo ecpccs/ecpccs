@@ -6,14 +6,15 @@
 #include <map>
 
 #include "LocalUser.h"
-#include "MessageListener.h"
 #include "../common/Certificate.h"
 
 class Messenger
 {
     public:
         Messenger(std::string login, std::string authorityIp);
-        
+       
+        void listen(unsigned int port = 65535);
+
         void retrieveRemoteUser(std::string login);
         void sendTo(std::string login, std::string message) const;
 
