@@ -15,9 +15,9 @@ class Message
 		RSA* _receiverPubKey;
 
 	public:
-		Message(const std::string& sender, const RSA* senderPrivateKey, const std::string& receiver, const RSA* receiverPublicKey, const std::string& content);
+		Message(const std::string& sender, RSA* senderPrivateKey, const std::string& receiver, RSA* receiverPublicKey, const std::string& content);
 
-		static Message* retrieveMessage(const std::string& xmlMessage);
+		static Message* retrieveMessage(const std::string& xmlMessage, RSA* senderPublicKey, RSA* receiverPrivateKey);
 		std::string toXml() const;
 
 		std::string getContent() const {return _content;}
