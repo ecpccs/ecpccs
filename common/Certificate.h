@@ -22,14 +22,17 @@ struct Certificate {
         strncpy(this->name, name.c_str(), std::min((int)name.size(), 16));
         strncpy(this->ip, (const char*)addr, 4);
         char* mod = BN_bn2hex(rsa->n);
+        std::cout << "Modulus : " << mod << std::endl;
         memset(this->modulus, 257, 0);
         strncpy(this->modulus, mod, strlen(mod));
+        std::cout  << "( size=" <<  strlen(mod) << ")" << std::endl;
         OPENSSL_free(mod);
     }
 
     in_addr getIp() {
         in_addr addr;
         strncpy(this->ip, (const char*)&addr, 4);
+        return addr;
     }
 
     RSA* getPublicKey() {
@@ -50,6 +53,7 @@ struct Certificate {
         if(res == 0) {
             std::cerr << "BN conversion error" << std::endl;
         }
+        return rsa;
     }
 };
 
