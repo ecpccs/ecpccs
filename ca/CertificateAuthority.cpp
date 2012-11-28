@@ -98,15 +98,24 @@ void* CertificateAuthority::clientThread(void *arg) {
         cout << "Received blowfish key : " << key << endl;
         RSA* rsa = RSA_generate_key(1024, 65537, NULL, NULL);
         char* d = BN_bn2hex(rsa->d);
+        char* n = BN_bn2hex(rsa->n);
+
+        char rsaKey[512];
+        memset(rsaKey, 512, 0);
+        strncpy(rsaKey, d, strlen(d));
+        strncpy(rsaKey+256, n, strlen(n));
+
+        OPENSSL_free(d);
+        OPENSSL_free(n);
 
         BF_KEY* blowfish = new BF_KEY;
         BF_set_key(blowfish, 16, (unsigned char*)key);
-        char cryptedKey[128];
+        char cryptedKey[512];
         unsigned char ivec[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         int num = 0;
-        BF_cfb64_encrypt((unsigned char*)d, (unsigned char*)cryptedKey, 128, blowfish, ivec, &num, BF_ENCRYPT);
+        BF_cfb64_encrypt((unsigned char*)rsaKey, (unsigned char*)cryptedKey, 512, blowfish, ivec, &num, BF_ENCRYPT);
 
-        send(clientSocket, cryptedKey, 128, 0);
+        send(clientSocket, cryptedKey, 512, 0);
         Certificate newCert(login, &handler->addr.sin_addr, rsa);
 
         ca->_register.insert(std::pair<string, Certificate>(login, newCert));
@@ -122,7 +131,7 @@ void* CertificateAuthority::clientThread(void *arg) {
         }
         Certificate cert = it->second;
         unsigned char digest[20];
-        cout << cert.name << endl << cert.ip << endl << cert.pKey << endl;
+        cout << cert.name << endl << cert.ip << endl << cert.modulus << endl;
         SHA1((unsigned char*)&cert, sizeof(cert), digest);
         cout << digest << endl;
         unsigned char encDigest[128];

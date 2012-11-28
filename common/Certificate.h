@@ -9,20 +9,22 @@
 
 #include <cstdio>
 #include <cstring>
+#include <cmath>
+#include <iostream>
 
 struct Certificate {
     char name[16];
     char ip[4];
-    char pKey[128];
+    char modulus[257];
 
     Certificate(std::string name, in_addr* addr, RSA* rsa) {
         memset(this->name, 16, 0);
-        strncpy(this->name, name.c_str(), name.size());
+        strncpy(this->name, name.c_str(), std::min((int)name.size(), 16));
         strncpy(this->ip, (const char*)addr, 4);
-        char* key = BN_bn2hex(rsa->n);
-        memset(this->pKey, 128, 0);
-        strncpy(this->pKey, key, strlen(key));
-        OPENSSL_free(key);
+        char* mod = BN_bn2hex(rsa->n);
+        memset(this->modulus, 257, 0);
+        strncpy(this->modulus, mod, strlen(mod));
+        OPENSSL_free(mod);
     }
 
     in_addr getIp() {
@@ -40,17 +42,11 @@ struct Certificate {
         rsa->dmp1 = NULL;
         rsa->dmq1 = NULL;
         rsa->iqmp = NULL;
-        char key[129];
-        strncpy(key, pKey, 128);
-        key[128] = 0;
-        std::cout << key << std::endl;
-        int res = BN_hex2bn(&rsa->e, key);
-        std::cout << res << std::endl;
+        int res = BN_hex2bn(&rsa->n, this->modulus);
         if(res == 0) {
             std::cerr << "BN conversion error" << std::endl;
         }
-        res = BN_dec2bn(&rsa->n, "65537");
-        std::cout << res << std::endl;
+        res = BN_dec2bn(&rsa->e, "65537");
         if(res == 0) {
             std::cerr << "BN conversion error" << std::endl;
         }

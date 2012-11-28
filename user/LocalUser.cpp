@@ -84,7 +84,7 @@ void LocalUser::auth(std::string ip)
 
     //retrieve own certificate, verify that it's from ac
     
-    unsigned char* buffer = new unsigned char[128];
+    unsigned char* buffer = new unsigned char[512];
     if(recv(acSock, buffer, 128, 0) < 0) {
         throw std::exception();
     }
