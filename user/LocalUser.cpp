@@ -25,6 +25,10 @@ using namespace std;
 LocalUser::LocalUser(std::string login)
  : _login(login), _registered(false)
 {
+    if(login.size() > 16) {
+        throw std::exception();
+    }
+
     _privKey = RSA_new();
 }
 

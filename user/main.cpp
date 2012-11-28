@@ -29,7 +29,12 @@ int main(int argc, char** argv)
         cout << "message : " << message << endl;
         cout << "target : " << target << endl;
         
-        
+        try {
+            messenger.sendTo(target, message);    
+        }
+        catch(std::exception& e) {
+            cerr << e.what() << endl;
+        }
 
         command = "";
     }

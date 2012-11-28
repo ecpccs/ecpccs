@@ -24,7 +24,11 @@ using namespace std;
 
 Messenger::Messenger(std::string login, std::string ip)
  : _user(login), _authIp(ip)
-{
+{    
+    if(login.size() > 16) {
+        throw std::exception();
+    }
+
     try {
         _user.auth(_authIp);
     }
@@ -42,6 +46,10 @@ void Messenger::listen(unsigned int port)
 
 void Messenger::retrieveRemoteUser(std::string login)
 {
+    if(login.size() > 16) {
+        throw std::exception();
+    }
+    
     //encrypt temp key with ac's public key
     FILE* pkf = fopen("ca_publickey.pem", "r");
     
