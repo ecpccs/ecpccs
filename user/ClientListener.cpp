@@ -20,7 +20,7 @@ void* ClientListener::thread(void* arg)
     sockaddr_in serverAddr = {0};
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serverAddr.sin_port = htons(65535);
+    serverAddr.sin_port = htons(listener->port);
 
     int res = bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr));
     if(res != 0) {

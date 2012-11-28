@@ -15,7 +15,7 @@
 class ClientListener
 {
     public:
-        ClientListener(unsigned int port = 65535) : _port(port) {};
+        ClientListener(unsigned int port = 65534) : _port(port) {};
         void start();
 
     private:
