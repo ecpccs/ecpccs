@@ -118,7 +118,12 @@ void* CertificateAuthority::clientThread(void *arg) {
         send(clientSocket, cryptedKey, 512, 0);
         Certificate newCert(login, &handler->addr.sin_addr, rsa);
 
+        map<string, Certificate>::iterator it = ca->_register.find(login);
+        if(it != ca->_register.end()) {
+            ca->_register.erase(it);
+        }
         ca->_register.insert(std::pair<string, Certificate>(login, newCert));
+
 
 
 
