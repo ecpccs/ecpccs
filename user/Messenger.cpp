@@ -16,6 +16,7 @@
 #include <openssl/rsa.h>
 #include <openssl/sha.h>
 #include <openssl/pem.h>
+#include <openssl/err.h>
 
 using namespace std;
 
@@ -78,10 +79,6 @@ void Messenger::retrieveRemoteUser(std::string login)
         throw std::exception();
     }
 
-    //cout << cert->name << endl;
-    //cout << cert->pKey << endl;
-    //cout << cert->ip << endl;
-
     unsigned char* signature = new unsigned char[128];
     if(recv(acSock, signature, 128, 0) < 0) {
         throw std::exception();
@@ -90,11 +87,8 @@ void Messenger::retrieveRemoteUser(std::string login)
     unsigned char* hash = new unsigned char[20];
     RSA_public_decrypt(128, signature, hash, acKey, RSA_PKCS1_PADDING);
 
-    cout << hash << endl;
-
     unsigned char* testHash = new unsigned char[20];
     SHA1(reinterpret_cast<unsigned char*>(cert), sizeof(Certificate), testHash);
-    cout << testHash << endl;
     if(strncmp((char*)hash, (char*)testHash, 20)) {
         cerr << "Bad signature !" << endl;
         return;
@@ -103,19 +97,16 @@ void Messenger::retrieveRemoteUser(std::string login)
 
     _remoteUsers.insert(std::make_pair(login, cert));
 
-    cout << "success !" << endl;
+    //RSA* pubKey = cert->getPublicKey();
 
+    //RSA* privKey = _user.getPrivateKey();
+    ////privKey->e = pubKey->e; 
+    //unsigned char b1[128], b2[13];
+    //int size = RSA_public_encrypt(13, (const unsigned char*)"Hello world!", b1, pubKey, RSA_PKCS1_OAEP_PADDING); 
+    //int size2 = RSA_private_decrypt(128, b1, b2, privKey, RSA_PKCS1_OAEP_PADDING);
 
-    RSA* pubKey = cert->getPublicKey();
-    RSA_print(NULL, pubKey, 0);
+    //ERR_load_crypto_strings();
+    //cout << size << " " << ERR_error_string(ERR_get_error(), NULL) << endl;
 
-    RSA* privKey = _user.getPrivateKey();
-    unsigned char b1[128], b2[13];
-    RSA_public_encrypt(12, (const unsigned char*)"Hello world!", b1, pubKey, RSA_PKCS1_OAEP_PADDING);
-    RSA_private_decrypt(128, b1, b2, privKey, RSA_PKCS1_OAEP_PADDING);
-    cout << b2 << endl;
-
-    
-
-    
+    //cout << b2 << endl;
 }

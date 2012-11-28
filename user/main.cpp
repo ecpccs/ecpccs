@@ -14,7 +14,9 @@ int main(int argc, char** argv)
         usage(argv[0]);
         return 0;
     }
-
+            
+    srand(time(0));
+    
     Messenger messenger(argv[1], argv[2]);
 
     messenger.retrieveRemoteUser(argv[1]);
