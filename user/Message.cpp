@@ -45,18 +45,20 @@ Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* mess
   	xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/Sign", xpathCtx);
 	char * signature = (char*) xmlNodeListGetString(doc, xpathObj->nodesetval->nodeTab[0]->xmlChildrenNode, 1);
 
-	xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/MsgXml", xpathCtx);
-	const char * msgXml = (char*) xmlNodeListGetString(doc, xpathObj->nodesetval->nodeTab[0]->xmlChildrenNode, 1);
+//    xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/MsgXml/text()", xpathCtx);
+//	const char * msgXml = (char*) xmlNodeListGetString(doc, xpathObj->nodesetval->nodeTab[0]->xmlChildrenNode, 1);
 
-	xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/MsgCrypt", xpathCtx);
+    xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/MsgXml/MsgCrypt", xpathCtx);
     const char * contentHex = (const char*) xmlNodeListGetString(doc, xpathObj->nodesetval->nodeTab[0]->xmlChildrenNode, 1);
 
-	xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/Token", xpathCtx);
+    xpathObj = xmlXPathEvalExpression ((xmlChar *) "/EnvXml/MsgXml/Token", xpathCtx);
     char * tokenHex = (char*) xmlNodeListGetString(doc, xpathObj->nodesetval->nodeTab[0]->xmlChildrenNode, 1);
 
 	// ------ checking hash
 	unsigned char contentHash[20];
-	SHA1(reinterpret_cast<const unsigned char*>(msgXml), strlen(msgXml), contentHash);
+    stringstream ss;
+    ss << tokenHex << contentHex;
+    SHA1(reinterpret_cast<const unsigned char*>(ss.str().c_str()), strlen(ss.str().c_str()), contentHash);
 
 	unsigned char hash[20];
     Certificate cert = messenger->findUser(sender);
@@ -115,7 +117,7 @@ std::string Message::toXml() const {
 	//getting hash for
 	unsigned char hash[20];
 	std::stringstream ss;
-    ss << "<Token>" << hex_encode((char*)encryptedbfk, pbSize) << "</Token>" << "<MsgCrypt>" << hex_encode((char*)encryptedMessage, messageSize) << "</MsgCrypt>";
+    ss << hex_encode((char*)encryptedbfk, pbSize) << hex_encode((char*)encryptedMessage, messageSize);
 	std::string toHash = ss.str(); 
 	SHA1(reinterpret_cast<const unsigned char*>(toHash.c_str()), toHash.size(), hash);
 
