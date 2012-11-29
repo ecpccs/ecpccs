@@ -149,7 +149,7 @@ void Messenger::sendTo(std::string login, std::string message) {
     }
 
     string data = msg.toXml();
-    int size = data.size();
+    int size = data.size()+1;
 
     if(send(sock, &size, 4, 0) < 0) {
         cerr << "Failed to send data to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
