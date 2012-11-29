@@ -115,7 +115,7 @@ void Messenger::retrieveRemoteUser(std::string login)
 
 
     _remoteUsers.insert(std::make_pair(login, *cert));
-    delete cert;
+    free(cert);
 
     //RSA* pubKey = cert->getPublicKey();
 
@@ -149,13 +149,14 @@ void Messenger::sendTo(std::string login, std::string message) {
     }
 
     string data = msg.toXml();
-    int size = data.size()+1;
+    const char* xml = data.c_str();
+    int size = strlen(xml)+1;
 
     if(send(sock, &size, 4, 0) < 0) {
         cerr << "Failed to send data to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
         throw std::exception();
     }
-    if(send(sock, data.c_str(), data.size(), 0) < 0) {
+    if(send(sock, xml, size, 0) < 0) {
         cerr << "Failed to send data to " << login << "@" <<  ip << ":" << strerror(errno) << endl;
         throw std::exception();
     }

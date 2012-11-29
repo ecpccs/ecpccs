@@ -30,6 +30,14 @@ LocalUser::LocalUser(std::string login)
     }
 
     _privKey = RSA_new();
+    _privKey->n = NULL;
+    _privKey->e = NULL;
+    _privKey->d = NULL;
+    _privKey->p = NULL;
+    _privKey->q = NULL;
+    _privKey->dmp1 = NULL;
+    _privKey->dmq1 = NULL;
+    _privKey->iqmp = NULL;
 }
 
 
@@ -114,11 +122,11 @@ void LocalUser::auth(std::string ip)
 
 //  cout << BN_bn2hex(_privKey->d) << endl;
 
-    delete privKey;
-    delete d;
-    delete n;
-    delete buffer;
-    delete key;
-    delete encryptedCommand;
+    delete[] privKey;
+    delete[] d;
+    delete[] n;
+    delete[] buffer;
+    delete[] key;
+    delete[] encryptedCommand;
     _registered = true;
 }
