@@ -30,7 +30,7 @@ int main(int argc, char** argv)
         cout << "target : " << target << endl;
         
         try {
-            messenger.sendTo(target, message);    
+            messenger.sendTo(target, message);
         }
         catch(std::exception& e) {
             cerr << e.what() << endl;

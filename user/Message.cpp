@@ -85,7 +85,7 @@ Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* mess
 
     unsigned char ivec[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     int num = 0;
-    BF_cfb64_encrypt(reinterpret_cast<const unsigned char*>(content), (unsigned char*)decryptedContent, msgSize, blowKey, ivec, &num, BF_DECRYPT);
+    BF_cfb64_encrypt(reinterpret_cast<const unsigned char*>(content), (unsigned char*)decryptedContent, msgSize/2, blowKey, ivec, &num, BF_DECRYPT);
 
 
 
