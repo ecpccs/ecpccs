@@ -95,7 +95,7 @@ Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* mess
 
 std::string Message::toXml() const {
 	const char* content = _content.c_str();
-    int messageSize = strlen(content);
+    int messageSize = strlen(content)+1;
 
 	// -------- encrypt content with blowfish key
 	// generate blowfish key to encrypt the message
