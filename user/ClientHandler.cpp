@@ -32,6 +32,7 @@ void* ClientHandler::thread(void* arg)
         close(clientSocket);
         pthread_exit(NULL);
     }
+    cout << "Received size=" << mSize << endl;
 
     char* buffer = new char[mSize];
     if(recv(clientSocket, buffer, mSize, 0) < 0)
