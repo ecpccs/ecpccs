@@ -94,7 +94,8 @@ void hex_decode(const unsigned char* from, size_t size, unsigned char* to) {
 }
 
 std::string hex_encode(const char* from, size_t size) {
-    unsigned char* buffer = new unsigned char[2*size];
+    unsigned char* buffer = new unsigned char[2*size+1];
+    buffer[2*size] = '\0';
     hex_encode((const unsigned char*)from, size, buffer);
     string res = (char*)buffer;
     delete buffer;

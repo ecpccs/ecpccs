@@ -26,6 +26,9 @@ Message::Message(const std::string& sender, RSA* senderPrivateKey, const std::st
 }
 
 Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* messenger) {
+
+    std::cout << "XML message received : \n" << xmlMessage << std::endl;
+
 	xmlDoc *doc;
 	xmlXPathContext *xpathCtx;
     xmlXPathObject *xpathObj;
@@ -90,7 +93,7 @@ Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* mess
 
 std::string Message::toXml() const {
 	const char* content = _content.c_str();
-	int messageSize = strlen(content);
+    int messageSize = strlen(content);
 
 	// -------- encrypt content with blowfish key
 	// generate blowfish key to encrypt the message
