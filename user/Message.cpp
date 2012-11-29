@@ -112,7 +112,7 @@ std::string Message::toXml() const {
 	//encrypting blowfish key
 	int pbSize = RSA_size(_receiverPubKey);
 	unsigned char encryptedbfk[pbSize];
-	RSA_public_encrypt(pbSize, key, encryptedbfk, _receiverPubKey, RSA_PKCS1_OAEP_PADDING);
+    RSA_public_encrypt(16, key, encryptedbfk, _receiverPubKey, RSA_PKCS1_OAEP_PADDING);
 	
 	//getting hash for
 	unsigned char hash[20];
