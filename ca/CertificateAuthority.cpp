@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <ctime>
 #include <iostream>
+#include <unistd.h>
 
 #include <openssl/rsa.h>
 #include <openssl/blowfish.h>
@@ -76,7 +77,7 @@ void* CertificateAuthority::clientThread(void *arg) {
     int clientSocket = handler->clientSocket;
     CertificateAuthority* ca = handler->ca;
 
-    cout << "clientThread started for socket " << clientSocket << endl;
+    //cout << "clientThread started for socket " << clientSocket << endl;
 
     char buffer[128];
     recv(clientSocket, buffer, 128, 0);
@@ -90,12 +91,12 @@ void* CertificateAuthority::clientThread(void *arg) {
     string request = decryptedBuffer;
     string req = request.substr(0, 4);
     string login = request.substr(5, 16);
-    cout << "Received request [" << req << "] from \"" << login << "\"" << endl;
+    cout << "<< [" << req << "] from \"" << login << "\"" << endl;
     if(req == "AUTH") {
         char key[16];
         strncpy(key, decryptedBuffer+22, 16);
 
-        cout << "Received blowfish key : " << key << endl;
+        //cout << "Received blowfish key : " << key << endl;
         RSA* rsa = RSA_generate_key(1024, 65537, NULL, NULL);
         char* d = BN_bn2hex(rsa->d);
         char* n = BN_bn2hex(rsa->n);
@@ -116,12 +117,14 @@ void* CertificateAuthority::clientThread(void *arg) {
         BF_cfb64_encrypt((unsigned char*)rsaKey, (unsigned char*)cryptedKey, 512, blowfish, ivec, &num, BF_ENCRYPT);
 
         send(clientSocket, cryptedKey, 512, 0);
-        Certificate newCert(login, &handler->addr.sin_addr, rsa);
+        in_addr addr = handler->addr.sin_addr;
+        Certificate newCert(login, &addr, rsa);
 
         map<string, Certificate>::iterator it = ca->_register.find(login);
         if(it != ca->_register.end()) {
             ca->_register.erase(it);
         }
+        cout << newCert.name << " registerd with ip [" << inet_ntoa(newCert.getIp()) << "]" << endl;
         ca->_register.insert(std::pair<string, Certificate>(login, newCert));
 
 
@@ -136,9 +139,9 @@ void* CertificateAuthority::clientThread(void *arg) {
         }
         Certificate cert = it->second;
         unsigned char digest[20];
-        cout << cert.name << endl << cert.ip << endl << cert.modulus << endl;
+        cout << ">>" << cert.name << endl << cert.ip << endl;
         SHA1((unsigned char*)&cert, sizeof(cert), digest);
-        cout << digest << endl;
+        //cout << digest << endl;
         unsigned char encDigest[128];
         RSA_private_encrypt(20, digest, encDigest, ca->_certificate, RSA_PKCS1_PADDING);
         send(clientSocket, &cert, sizeof(cert), 0);

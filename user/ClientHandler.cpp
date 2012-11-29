@@ -3,6 +3,8 @@
 #include <iostream>
 #include <pthread.h>
 
+#include <unistd.h>
+
 #include "Message.h"
 #include "ClientListener.h"
 

@@ -164,7 +164,7 @@ Certificate Messenger::findUser(std::string u) {
     map<string, Certificate>::const_iterator it = _remoteUsers.find(u);
     if(it == _remoteUsers.end()) {
         this->retrieveRemoteUser(u);
-        map<string, Certificate>::const_iterator it = _remoteUsers.find(u);
+        it = _remoteUsers.find(u);
         if(it == _remoteUsers.end()) {
             throw exception();
         }

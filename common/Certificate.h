@@ -22,16 +22,16 @@ struct Certificate {
         strncpy(this->name, name.c_str(), std::min((int)name.size(), 16));
         strncpy(this->ip, (const char*)addr, 4);
         char* mod = BN_bn2hex(rsa->n);
-        std::cout << "Modulus : " << mod << std::endl;
+        //std::cout << "Modulus : " << mod << std::endl;
         memset(this->modulus, 257, 0);
         strncpy(this->modulus, mod, strlen(mod));
-        std::cout  << "( size=" <<  strlen(mod) << ")" << std::endl;
+        //std::cout  << "( size=" <<  strlen(mod) << ")" << std::endl;
         OPENSSL_free(mod);
     }
 
     in_addr getIp() {
         in_addr addr;
-        strncpy(this->ip, (const char*)&addr, 4);
+        strncpy((char*)&addr, this->ip, 4);
         return addr;
     }
 
@@ -47,11 +47,11 @@ struct Certificate {
         rsa->iqmp = NULL;
         int res = BN_hex2bn(&rsa->n, this->modulus);
         if(res == 0) {
-            std::cerr << "BN conversion error" << std::endl;
+            std::cerr << "BN conversion error modulus = '" << this->modulus << "'" << std::endl;
         }
         res = BN_dec2bn(&rsa->e, "65537");
         if(res == 0) {
-            std::cerr << "BN conversion error" << std::endl;
+            std::cerr << "BN conversion error on exponent 65537" << std::endl;
         }
         return rsa;
     }
