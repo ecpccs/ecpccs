@@ -27,7 +27,7 @@ Message::Message(const std::string& sender, RSA* senderPrivateKey, const std::st
 
 Message* Message::retrieveMessage(const std::string& xmlMessage, Messenger* messenger) {
 
-    std::cout << "XML message received : \n" << xmlMessage << std::endl;
+    //std::cout << "XML message received : \n" << xmlMessage << std::endl;
 
 	xmlDoc *doc;
 	xmlXPathContext *xpathCtx;
