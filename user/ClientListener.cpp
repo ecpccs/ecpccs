@@ -9,12 +9,18 @@ using namespace std;
 void ClientListener::start()
 {
     pthread_t thread;
+    //cout << "port " << this->_port << endl;
+    //cout << ios_base::hex << reinterpret_cast<intptr_t>(this) << endl;
     pthread_create(&thread, NULL, ClientListener::thread, this);
 }
 
 void* ClientListener::thread(void* arg)
 {
     ClientListener* listener = reinterpret_cast<ClientListener*>(arg);
+   
+    
+    //cout << ios_base::hex << reinterpret_cast<intptr_t>(listener) << endl;
+    //cout << "listener started on port " << listener->_port << endl;
 
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     sockaddr_in serverAddr = {0};

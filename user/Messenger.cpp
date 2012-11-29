@@ -42,8 +42,9 @@ Messenger::Messenger(std::string login, std::string ip)
 
 void Messenger::listen(unsigned int port)
 {
-    ClientListener listener(this, port);
-    listener.start();
+    //cout << "Messenger is starting to listen on port " << port << endl;
+    ClientListener *listener = new ClientListener(this, port);
+    listener->start();
 }
 
 void Messenger::retrieveRemoteUser(std::string login)
