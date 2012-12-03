@@ -122,9 +122,11 @@ void* CertificateAuthority::clientThread(void *arg) {
 
         map<string, Certificate>::iterator it = ca->_register.find(login);
         if(it != ca->_register.end()) {
-            ca->_register.erase(it);
+            close(clientSocket);
+            pthread_exit(NULL);
+            //ca->_register.erase(it);
         }
-        cout << newCert.name << " registerd with ip [" << inet_ntoa(newCert.getIp()) << "]" << endl;
+        cout << newCert.name << " registered with ip [" << inet_ntoa(newCert.getIp()) << "]" << endl;
         ca->_register.insert(std::pair<string, Certificate>(login, newCert));
 
 
